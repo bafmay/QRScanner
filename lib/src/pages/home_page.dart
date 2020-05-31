@@ -1,7 +1,12 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:qr_scanner_app/src/bloc/scans_bloc.dart';
+import 'package:qr_scanner_app/src/models/scan_model.dart';
 import 'package:qr_scanner_app/src/pages/direcciones_page.dart';
 import 'package:qr_scanner_app/src/pages/mapas_page.dart';
 import 'package:qrscan/qrscan.dart' as scanner;
+import 'package:qr_scanner_app/src/utils/utils.dart' as utils;
 
 class HomePage extends StatefulWidget {
 
@@ -11,6 +16,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
 
+  final scansBloc = ScansBloc();
   int currentIndex = 0;
 
   @override
@@ -21,7 +27,7 @@ class _HomePageState extends State<HomePage> {
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.delete_forever), 
-            onPressed: (){}
+            onPressed: scansBloc.borrarScanTodos
           )
         ],
       ),
@@ -68,8 +74,9 @@ class _HomePageState extends State<HomePage> {
   _scanQR() async{
 
 // geo:-12.160256229785535,-76.96701422175296
+// https://www.figma.com/
 
-    String futureString = '';
+    String futureString = 'https://www.figma.com/';
 
     // try{
     //   futureString = await scanner.scan();
@@ -77,11 +84,24 @@ class _HomePageState extends State<HomePage> {
     //   futureString = e.toString();
     // }
 
-    // print("Future string: $futureString");
+    
 
-    // if(futureString != null){
+    if(futureString != null){
+      final model = ScanModel(valor: futureString);
+      scansBloc.agregarScan(model);
 
-    // }
+      final model2 = ScanModel(valor: 'geo:-12.160256229785535,-76.96701422175296');
+      scansBloc.agregarScan(model2);
+
+      if(Platform.isIOS){
+        Future.delayed(Duration(milliseconds: 750),(){
+          utils.abrirScan(model);
+        });
+      }else{
+        utils.abrirScan(model);
+      }
+      
+    }
  
   }
 }

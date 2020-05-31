@@ -5,6 +5,9 @@ import 'package:path_provider/path_provider.dart';
 import 'package:qr_scanner_app/src/models/scan_model.dart';
 import 'package:sqflite/sqflite.dart';
 
+export 'package:qr_scanner_app/src/models/scan_model.dart';
+
+
 class DBProvider {
 
   static Database _database; 
@@ -85,7 +88,7 @@ class DBProvider {
     return res;
   }
 
-  Future<int> deleteAll(int id) async {
+  Future<int> deleteAll() async {
     final db = await database;
     final res = await db.rawDelete("DELETE FROM Scans");
     return res;
