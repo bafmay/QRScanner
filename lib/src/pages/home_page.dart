@@ -37,7 +37,7 @@ class _HomePageState extends State<HomePage> {
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.filter_center_focus),
         backgroundColor: Theme.of(context).primaryColor,
-        onPressed: _scanQR
+        onPressed: () => _scanQR(context)
       ),
     );
   }
@@ -71,34 +71,26 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  _scanQR() async{
+  _scanQR(BuildContext context) async{
 
-// geo:-12.160256229785535,-76.96701422175296
-// https://www.figma.com/
+    String futureString;
 
-    String futureString = 'https://www.figma.com/';
-
-    // try{
-    //   futureString = await scanner.scan();
-    // }catch(e){
-    //   futureString = e.toString();
-    // }
-
-    
+    try{
+      futureString = await scanner.scan();
+    }catch(e){
+      futureString = e.toString();
+    }
 
     if(futureString != null){
       final model = ScanModel(valor: futureString);
       scansBloc.agregarScan(model);
 
-      final model2 = ScanModel(valor: 'geo:-12.160256229785535,-76.96701422175296');
-      scansBloc.agregarScan(model2);
-
       if(Platform.isIOS){
         Future.delayed(Duration(milliseconds: 750),(){
-          utils.abrirScan(model);
+          utils.abrirScan(context,model);
         });
       }else{
-        utils.abrirScan(model);
+        utils.abrirScan(context,model);
       }
       
     }
